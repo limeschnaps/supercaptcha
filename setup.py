@@ -11,7 +11,7 @@ setup(
     },
     install_requires=[
         'django',
-        'PIL'
+        'pillow'
     ],
     author='Viktor Kotseruba',
     author_email='barbuzaster@gmail.com',
