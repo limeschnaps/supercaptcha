@@ -16,7 +16,7 @@ class MySuperForm(forms.Form):
 You don't need any changes in form, or middleware or context processor or other mess
 
 All you need, to get captcha working is properly configured cache backend and a route:
-  
+
     url(r'^captcha/(?P<code>[\da-f]{32})/$', 'supercaptcha.draw')
 
 And `PIL` installed
@@ -43,7 +43,7 @@ whould we use different colors for each symbol default is `True`
 
 #### `CAPTCHA_BACKGROUND_COLOR`
 background color, deafult is `(255, 255, 255)`
- 
+
 #### `CAPTCHA_FILTER_CHAIN`
 PIL filters, for example `('BLUR', 'SHARPEN',)` default is `[]`
 
@@ -76,3 +76,9 @@ defines template of CaptchaField, see example in settings
 
 #### `CAPTCHA_HTML_TEMPLATE_WITH_REFRESH`
 defines template of CaptchaField with refresh link, see example in settings
+
+## changelog
+
+* 0.2.0 compability with django 1.7
+
+* 0.1.4 forked version
