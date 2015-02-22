@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import codecs
 from random import choice, random
 
 try:
@@ -16,7 +17,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.views.decorators.cache import never_cache
 
-import settings
+from . import settings
 
 
 try:
@@ -47,7 +48,7 @@ REFRESH_LINK_TEXT = ugettext_lazy(settings.REFRESH_LINK_TEXT)
 
 def get_current_code():
     if not hasattr(_thread_locals, CODE_ATTR_NAME):
-        code = os.urandom(16).encode('hex')
+        code = codecs.encode(os.urandom(16), 'hex')
         setattr(_thread_locals, CODE_ATTR_NAME, code)
     return getattr(_thread_locals, CODE_ATTR_NAME)
 
@@ -107,8 +108,8 @@ def draw(request, code):
             get_color = lambda: color
         position = [(WIDTH - text_size[0]) / 2, 0]
         shift_max = HEIGHT - text_size[1]
-        shift_min = shift_max / 4
-        shift_max = shift_max * 3 / 4
+        shift_min = shift_max // 4
+        shift_max = shift_max * 3 // 4
         for char in text:
             l_size = font.getsize(char)
             try:
@@ -185,8 +186,8 @@ class CaptchaField(forms.MultiValueField):
 
     default_error_messages = {
         'wrong': ugettext_lazy(ERROR_MESSAGE),
-        'required': ugettext_lazy(u'This field is required.'),
-        'internal': ugettext_lazy(u'Internal error.'),
+        'required': ugettext_lazy('This field is required.'),
+        'internal': ugettext_lazy('Internal error.'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -201,16 +202,16 @@ class CaptchaField(forms.MultiValueField):
 
     def clean(self, value):
         if len(value) != 2:
-            raise forms.ValidationError, self.error_messages['wrong']
+            raise forms.ValidationError(self.error_messages['wrong'])
 
         code, text = value
         if not text:
-            raise forms.ValidationError, self.error_messages['required']
+            raise forms.ValidationError(self.error_messages['required'])
 
         cached_text = cache.get('%s-%s' % (PREFIX, code))
         cache.set('%s-%s' % (PREFIX, code), generate_text(), 600)
         if not cached_text:
-            raise forms.ValidationError, self.error_messages['internal']
+            raise forms.ValidationError(self.error_messages['internal'])
 
         if text.lower() != cached_text.lower():
-            raise forms.ValidationError, self.error_messages['wrong']
+            raise forms.ValidationError(self.error_messages['wrong'])
