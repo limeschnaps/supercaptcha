@@ -79,6 +79,6 @@ defines template of CaptchaField with refresh link, see example in settings
 
 ## changelog
 
-* 0.2.0 compability with django 1.7
+* 0.2.1 patched for Python3
 
-* 0.1.4 forked version
+* 0.2.0 forked version
